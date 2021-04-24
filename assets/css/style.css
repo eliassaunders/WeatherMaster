@@ -1,0 +1,25 @@
+.element {
+    all: none;
+}
+
+:root {
+
+    --primary: #02475e;
+    --secondary: #02475e;
+    --tertiary: #f3bda1;
+    --quartiary: #fefecc;
+}
+
+
+main {
+   margin: 0 !important;
+   padding: 0 !important;
+}
+
+body {
+    background-color: var(--secondary);
+}
+
+.sbmt-sec {
+    background-color: var(--secondary);
+}
