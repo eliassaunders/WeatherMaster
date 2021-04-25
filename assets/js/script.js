@@ -1,7 +1,8 @@
 var buttonEl = document.querySelector('#sbmt-btn');
 var displaySecEl = document.querySelector('#display-div');
 var inputEl = document.querySelector('#input-sbmt');
-
+var projectionEl = document.querySelector('#projectionDiv');
+var recoverEl = document.querySelector('#recover-btn');
 
 var saveArr = [];
 
@@ -12,6 +13,8 @@ for (var i = 0; i < saveArr.length; i++) {
 }
 
 var getInfo = function (event) {
+    projectionEl.innerHTML = "";
+
     var inputRead = inputEl.value;
 
     saveArr.push(inputRead);
@@ -25,7 +28,7 @@ var getInfo = function (event) {
                     response.json().then(function (data) {
 
                         const lat = data.coord.lat;
-                        const long = data.coord.lat;
+                        const long = data.coord.lon;
 
                         if (inputRead) {
                             fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=minutely,hourly&appid=1c82bb4d8f20db1e69a427f00d909415&units=imperial')
@@ -33,6 +36,7 @@ var getInfo = function (event) {
                                     if (response.ok) {
                                         response.json().then(function (locationData) {
                                             console.log(locationData);
+                                            console.log(data);
                                             displayInfo1(data, locationData);
 
                                         })
@@ -119,20 +123,76 @@ var displayInfo1 = function (data, locationData) {
         container.setAttribute('id', 'low-risk');
     };
 
-    var expButton = document.createElement("button");
-    expButton.setAttribute("class", "btn");
-    expButton.setAttribute("id", "expButton")
-    expButton.textContent = "Expand Info"
+        var humidity1 = document.createElement("p");
+        humidity1.textContent = locationData.current.humidity + "% Humidity";
+        container.appendChild(humidity1);
 
-    var 
-    var displayExtended = function(locationData, data) {
-        for (var i = 0; i < locationData.daily.array.length; i++) {
-            
+        var location2 = document.createElement("h2");
+        location2.textContent = data.name;
+        projectionEl.appendChild(location2);
+
+        var container2 = document.createElement('div');
+        container2.setAttribute('class', 'card submission');
+        projectionEl.appendChild(container2);
+
+        for (var i = 0; i < locationData.daily.length; i++) {
+
+            var dateEl = document.createElement("h3");
+            var a = new Date(locationData.daily[i].dt * 1000);
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var year = a.getFullYear();
+            var month = months[a.getMonth()];
+            var date = a.getDate();
+            var time = date + ' ' + month + ' ' + year;
+            dateEl.textContent = time;
+            container2.appendChild(dateEl);
+            dateEl.setAttribute('class', '');
+
+            var temp2 = document.createElement("p");
+            temp2.setAttribute('class', "");
+            var tempCon2 = locationData.daily[i].temp.day;
+            temp2.textContent = tempCon2 + " F";
+            container2.appendChild(temp2);
+
+            if (locationData.daily[i].weather[0].main === "Rain") {
+                var image2 = document.createElement('img');
+                image2.setAttribute("src", "./assets/raining-svgrepo-com.svg");
+                image2.setAttribute('height', "100px");
+                image2.setAttribute('width', "100px");
+                image2.setAttribute('class', "card-image");
+                container2.appendChild(image2);
+            } else if (locationData.daily[i].weather[0].main === "Clear") {
+                var image2 = document.createElement('img');
+                image2.setAttribute("src", "./assets/lights-sun-svgrepo-com.svg");
+                image2.setAttribute('height', "100px");
+                image2.setAttribute('width', "100px");
+                image2.setAttribute('class', "card-image");
+                container2.appendChild(image2);
+            } else if (locationData.daily[i].weather[0].main === "Clouds") {
+                var image2 = document.createElement('img');
+                image2.setAttribute("src", "./assets/cloudy-svgrepo-com.svg");
+                image2.setAttribute('height', "100px");
+                image2.setAttribute('width', "100px");
+                image2.setAttribute('class', "card-image");
+                container2.appendChild(image2);
+            };
+
+            var humidity = document.createElement("p");
+            humidity.textContent = locationData.daily[i].humidity + "% Humidity";
+            container2.appendChild(humidity);
+
+            var windSpeed = document.createElement("p");
+            windSpeed.textContent = locationData.daily[i].wind_speed + " MPH";
         }
-    }
-    expButton.addEventListener("click", displayExtended);
+
 }
 
+var recoverInfo = function(event) {
+    for (var i = 0; i < saveArr.length; i++) {
+        inputRead.textContent = saveArr[i].value
+        getInfo(inputRead);
+    }
+}
 
-
+recoverEl.addEventListener("click", recoverInfo);
 buttonEl.addEventListener("click", getInfo)
