@@ -4,22 +4,25 @@ var inputEl = document.querySelector('#input-sbmt');
 var projectionEl = document.querySelector('#projectionDiv');
 var recoverEl = document.querySelector('#recover-btn');
 
+
 var saveArr = [];
 
-var pullLocations = localStorage.getItem('saveArr');
 
-for (var i = 0; i < saveArr.length; i++) {
-    displayInfo(saveArr);
+var saveInfo = function () {
+    localStorage.setItem('inputs', saveArr);
 }
 
-var getInfo = function (event) {
-    projectionEl.innerHTML = "";
+var getInfo = function (event, inputRead) {
+ 
+    event.preventDefault();
 
     var inputRead = inputEl.value;
 
-    saveArr.push(inputRead);
+    console.log(inputRead)
 
-    localStorage.setItem('saveArr', JSON.stringify(saveArr));
+    projectionEl.innerHTML = "";
+
+    saveArr.push(inputRead);    
 
     if (inputRead) {
         fetch('https://api.openweathermap.org/data/2.5/weather?q=' + inputRead + '&appid=1c82bb4d8f20db1e69a427f00d909415&units=imperial')
@@ -184,14 +187,12 @@ var displayInfo1 = function (data, locationData) {
             var windSpeed = document.createElement("p");
             windSpeed.textContent = locationData.daily[i].wind_speed + " MPH";
         }
-
+saveInfo();
 }
 
-var recoverInfo = function(event) {
-    for (var i = 0; i < saveArr.length; i++) {
-        inputRead.textContent = saveArr[i].value
-        getInfo(inputRead);
-    }
+
+var recoverInfo = function(event, savedData) {
+
 }
 
 recoverEl.addEventListener("click", recoverInfo);
