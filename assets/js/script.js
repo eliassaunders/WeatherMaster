@@ -12,17 +12,17 @@ var saveInfo = function () {
     localStorage.setItem('inputs', saveArr);
 }
 
-var getInfo = function (event, inputRead) {
+var getInfo = function (event) {
  
-    event.preventDefault();
+    event.preventDefault();  
 
-    var inputRead = inputEl.value;
-
-    console.log(inputRead)
-
+    var inputRead = inputEl.value; //input is defined here and therefore always is that value upon the function call.
+    saveArr.push(inputRead);
+    console.log(inputRead)   
+    //I want to change the variable "inputRead" here to be the value of a localStorage item only if my "recoverInfo" event executes 
+    //if("recoverInfo" is clicked){ replaceVariable(); }
     projectionEl.innerHTML = "";
-
-    saveArr.push(inputRead);    
+     
 
     if (inputRead) {
         fetch('https://api.openweathermap.org/data/2.5/weather?q=' + inputRead + '&appid=1c82bb4d8f20db1e69a427f00d909415&units=imperial')
@@ -190,9 +190,13 @@ var displayInfo1 = function (data, locationData) {
 saveInfo();
 }
 
+var replaceVariable = function() {
+    var inputRead = "tucson"; //tucson would be replaced with the localStorage value
+};
 
-var recoverInfo = function(event, savedData) {
+var recoverInfo = function(event) {
 
+    displayInfo1(); //it will execute the display function but "replaceVariable" needs to be selectively called after the original "inputRead" call 
 }
 
 recoverEl.addEventListener("click", recoverInfo);
