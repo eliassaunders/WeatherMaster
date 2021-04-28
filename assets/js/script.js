@@ -8,17 +8,13 @@ var recoverEl = document.querySelector('#recover-btn');
 var saveArr = [];
 
 
-var saveInfo = function () {
-    localStorage.setItem('inputs', saveArr);
-}
-
-var getInfo = function (event) {
+var getInfo = function (event, textInput) {
  
     event.preventDefault();  
-
-    var inputRead = inputEl.value; //input is defined here and therefore always is that value upon the function call.
-    saveArr.push(inputRead);
-    console.log(inputRead)   
+    console.log(textInput);
+    var inputRead = textInput || inputEl.value; //input is defined here and therefore always is that value upon the function call.
+    localStorage.setItem('inputs', inputRead);
+    
     //I want to change the variable "inputRead" here to be the value of a localStorage item only if my "recoverInfo" event executes 
     //if("recoverInfo" is clicked){ replaceVariable(); }
     projectionEl.innerHTML = "";
@@ -135,7 +131,7 @@ var displayInfo1 = function (data, locationData) {
         projectionEl.appendChild(location2);
 
         var container2 = document.createElement('div');
-        container2.setAttribute('class', 'card submission');
+        container2.setAttribute('class', 'submission');
         projectionEl.appendChild(container2);
 
         for (var i = 0; i < locationData.daily.length; i++) {
@@ -162,21 +158,18 @@ var displayInfo1 = function (data, locationData) {
                 image2.setAttribute("src", "./assets/raining-svgrepo-com.svg");
                 image2.setAttribute('height', "100px");
                 image2.setAttribute('width', "100px");
-                image2.setAttribute('class', "card-image");
                 container2.appendChild(image2);
             } else if (locationData.daily[i].weather[0].main === "Clear") {
                 var image2 = document.createElement('img');
                 image2.setAttribute("src", "./assets/lights-sun-svgrepo-com.svg");
                 image2.setAttribute('height', "100px");
                 image2.setAttribute('width', "100px");
-                image2.setAttribute('class', "card-image");
                 container2.appendChild(image2);
             } else if (locationData.daily[i].weather[0].main === "Clouds") {
                 var image2 = document.createElement('img');
                 image2.setAttribute("src", "./assets/cloudy-svgrepo-com.svg");
                 image2.setAttribute('height', "100px");
                 image2.setAttribute('width', "100px");
-                image2.setAttribute('class', "card-image");
                 container2.appendChild(image2);
             };
 
@@ -187,16 +180,14 @@ var displayInfo1 = function (data, locationData) {
             var windSpeed = document.createElement("p");
             windSpeed.textContent = locationData.daily[i].wind_speed + " MPH";
         }
-saveInfo();
+
 }
 
-var replaceVariable = function() {
-    var inputRead = "tucson"; //tucson would be replaced with the localStorage value
-};
+
 
 var recoverInfo = function(event) {
-
-    displayInfo1(); //it will execute the display function but "replaceVariable" needs to be selectively called after the original "inputRead" call 
+    var recovered = localStorage.getItem("inputs");
+    getInfo(event, recovered); //it will execute the display function but "replaceVariable" needs to be selectively called after the original "inputRead" call 
 }
 
 recoverEl.addEventListener("click", recoverInfo);
