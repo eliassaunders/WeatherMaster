@@ -6,4 +6,4 @@
 
 https://eliassaunders.github.io/WeatherMaster/
 
-!
+![Screenshot](./assets/Capture.png)
